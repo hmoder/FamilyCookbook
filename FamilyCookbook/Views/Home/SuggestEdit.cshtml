@@ -1,0 +1,85 @@
+﻿@model FamilyCookbook.Models.SuggestEdit
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        function ShowMessageSent(userData) {
+            var target = $("#editForm")
+            target.empty();
+
+            if (userData) {
+
+                $(document).ready(target.append("<p id=successMessage>Your suggestion has been sent,<br><strong>"
+                    + userData.firstName + " " + userData.lastName
+                    + "!</strong><br>Thank you for your feedback!</p>"))
+            } else {
+                target.append("<p>Please check your entry.</p>")
+            }
+        }
+    </script>
+}
+
+@{
+    ViewBag.Title = "SuggestEdit";
+    AjaxOptions ajaxOpts = new AjaxOptions
+    {
+        HttpMethod = "Post",
+        InsertionMode = InsertionMode.Replace,
+        LoadingElementId = "loading",
+        LoadingElementDuration = 3000,
+        OnSuccess = "ShowMessageSent"
+    };
+}
+
+<div id="heading">
+    <h1>Edit Suggestion Form</h1>
+</div>
+
+<div id="loading" style="display:none">
+    Sending suggestion...
+</div>
+
+<div id="editForm">
+
+    <p class="editInstructions">
+        Do you have an idea to improve our site?
+        <br />
+        Did you notice an error in one of the recipes?
+        <br />
+        Fill out the form below to let us know!
+    </p>
+
+    @using (Ajax.BeginForm("SuggestEdit", "Home", ajaxOpts))
+    {
+        <table>
+            <tr>
+                <td>First Name:</td>
+                <td>@Html.TextBoxFor(s => s.firstName)</td>
+            </tr>
+            <tr>
+                <td>Last Name:</td>
+                <td>@Html.TextBoxFor(s => s.lastName)</td>
+            </tr>
+            <tr>
+                <td>Email Address:</td>
+                <td>@Html.TextBoxFor(s => s.emailAddress)</td>
+            </tr>
+            <tr>
+                <td>Recipe Name:</td>
+                <td>@Html.TextBoxFor(s => s.recipeName)</td>
+            </tr>
+        </table>
+
+        <div class="detailsArea">
+            Details:
+            <br />
+            @Html.TextAreaFor(s => s.editDetails)
+        </div>
+
+        <div>
+            <input type="reset" value="Reset" />
+            <input type="submit" value="Send" />
+        </div>
+    }
+
+</div>

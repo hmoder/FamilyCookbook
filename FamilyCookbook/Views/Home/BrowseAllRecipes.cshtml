@@ -1,0 +1,36 @@
+﻿@using FamilyCookbook.Models;
+@using FamilyCookbook.Models.EntityFramework;
+@model List<RECIPE>
+
+@{
+    ViewBag.Title = "BrowseAllRecipes";
+}
+
+<div id="heading">
+    <h1>Browse All Recipes</h1>
+</div>
+
+<div class="searchBar">
+    @Html.Partial("_SearchBar")
+    @Html.ValidationSummary(true)
+</div>
+
+<div id="allCards">
+    @{
+        // Loop through recipes and build card
+        foreach (RECIPE recipe in Model)
+        {
+
+            <div class="recipeCard">
+                <div class="thumb">
+                    <a href="@Url.Action("Details", "RecipeDetails", new { id = recipe.RECIPE_ID})">
+                        <img src="~/Content/Images/RecipeImages/@recipe.CATEGORY.DESCRIPTION/@recipe.RECIPE_ID/thumb.jpg" alt="@recipe.NAME" width="200" height="200" />
+                    </a>
+                </div>
+
+                <h2>@recipe.NAME</h2>
+
+            </div>
+        }
+    }
+</div>

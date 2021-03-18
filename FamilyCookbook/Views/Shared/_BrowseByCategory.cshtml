@@ -1,0 +1,8 @@
+﻿@using FamilyCookbook.Models;
+@model BrowseByCategory
+
+@using (Html.BeginForm("BrowseByCategory", "Home", FormMethod.Post))
+{
+    @Html.DropDownListFor(s => s.CategorySelected, Model.AllCategoryOptions, "Select a Category")
+    <input type="submit" value="Filter" />
+}

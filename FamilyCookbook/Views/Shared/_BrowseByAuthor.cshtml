@@ -1,0 +1,8 @@
+﻿@using FamilyCookbook.Models;
+@model BrowseByAuthor
+
+@using (Html.BeginForm("BrowseByAuthor", "Home", FormMethod.Post))
+{
+    @Html.DropDownListFor(s => s.AuthorSelected, Model.AllAuthorOptions, "Select an Author")
+    <input type="submit" value="Filter" />
+}

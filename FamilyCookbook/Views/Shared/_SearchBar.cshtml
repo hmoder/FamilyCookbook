@@ -1,0 +1,8 @@
+﻿
+@using (Html.BeginForm("BrowseAllRecipes", "Home", FormMethod.Post))
+{
+    <p style="margin-bottom: 0">
+        Search Recipes: @Html.TextBox("searchCriteria")
+        <input type="submit" name="search" value="Search" />
+    </p>
+}

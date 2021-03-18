@@ -1,0 +1,419 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CookbookModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AUTHOR">
+          <Key>
+            <PropertyRef Name="AUTHOR_ID" />
+          </Key>
+          <Property Name="AUTHOR_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FIRST_NAME" Type="varchar" MaxLength="35" Nullable="false" />
+          <Property Name="LAST_NAME" Type="nvarchar" MaxLength="35" />
+        </EntityType>
+        <EntityType Name="CATEGORY">
+          <Key>
+            <PropertyRef Name="CATEGORY_ID" />
+          </Key>
+          <Property Name="CATEGORY_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DESCRIPTION" Type="varchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FOOD_ITEM">
+          <Key>
+            <PropertyRef Name="FOOD_ID" />
+          </Key>
+          <Property Name="FOOD_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DESCRIPTION" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="INGREDIENT">
+          <Key>
+            <PropertyRef Name="RECIPE_ID" />
+            <PropertyRef Name="FOOD_ID" />
+          </Key>
+          <Property Name="RECIPE_ID" Type="int" Nullable="false" />
+          <Property Name="FOOD_ID" Type="int" Nullable="false" />
+          <Property Name="AMOUNT" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="MEASUREMENT_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="MEASUREMENT">
+          <Key>
+            <PropertyRef Name="MEASUREMENT_ID" />
+          </Key>
+          <Property Name="MEASUREMENT_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DESCRIPTION" Type="varchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RECIPE">
+          <Key>
+            <PropertyRef Name="RECIPE_ID" />
+          </Key>
+          <Property Name="RECIPE_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NAME" Type="varchar" MaxLength="75" Nullable="false" />
+          <Property Name="SERVING_SIZE" Type="varchar" MaxLength="15" />
+          <Property Name="SERVING_UNIT" Type="varchar" MaxLength="50" />
+          <Property Name="CATEGORY_ID" Type="int" Nullable="false" />
+          <Property Name="INSTRUCTIONS" Type="varchar(max)" />
+          <Property Name="AUTHOR_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_INGREDIENT_FOOD_ITEM">
+          <End Role="FOOD_ITEM" Type="Self.FOOD_ITEM" Multiplicity="1" />
+          <End Role="INGREDIENT" Type="Self.INGREDIENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FOOD_ITEM">
+              <PropertyRef Name="FOOD_ID" />
+            </Principal>
+            <Dependent Role="INGREDIENT">
+              <PropertyRef Name="FOOD_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_INGREDIENT_MEASUREMENT">
+          <End Role="MEASUREMENT" Type="Self.MEASUREMENT" Multiplicity="0..1" />
+          <End Role="INGREDIENT" Type="Self.INGREDIENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MEASUREMENT">
+              <PropertyRef Name="MEASUREMENT_ID" />
+            </Principal>
+            <Dependent Role="INGREDIENT">
+              <PropertyRef Name="MEASUREMENT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_INGREDIENT_RECIPE">
+          <End Role="RECIPE" Type="Self.RECIPE" Multiplicity="1" />
+          <End Role="INGREDIENT" Type="Self.INGREDIENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RECIPE">
+              <PropertyRef Name="RECIPE_ID" />
+            </Principal>
+            <Dependent Role="INGREDIENT">
+              <PropertyRef Name="RECIPE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RECIPE_AUTHOR">
+          <End Role="AUTHOR" Type="Self.AUTHOR" Multiplicity="0..1" />
+          <End Role="RECIPE" Type="Self.RECIPE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AUTHOR">
+              <PropertyRef Name="AUTHOR_ID" />
+            </Principal>
+            <Dependent Role="RECIPE">
+              <PropertyRef Name="AUTHOR_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RECIPE_CATEGORY">
+          <End Role="CATEGORY" Type="Self.CATEGORY" Multiplicity="1" />
+          <End Role="RECIPE" Type="Self.RECIPE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CATEGORY">
+              <PropertyRef Name="CATEGORY_ID" />
+            </Principal>
+            <Dependent Role="RECIPE">
+              <PropertyRef Name="CATEGORY_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CookbookModelStoreContainer">
+          <EntitySet Name="AUTHOR" EntityType="Self.AUTHOR" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CATEGORY" EntityType="Self.CATEGORY" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FOOD_ITEM" EntityType="Self.FOOD_ITEM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="INGREDIENT" EntityType="Self.INGREDIENT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MEASUREMENT" EntityType="Self.MEASUREMENT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RECIPE" EntityType="Self.RECIPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_INGREDIENT_FOOD_ITEM" Association="Self.FK_INGREDIENT_FOOD_ITEM">
+            <End Role="FOOD_ITEM" EntitySet="FOOD_ITEM" />
+            <End Role="INGREDIENT" EntitySet="INGREDIENT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_INGREDIENT_MEASUREMENT" Association="Self.FK_INGREDIENT_MEASUREMENT">
+            <End Role="MEASUREMENT" EntitySet="MEASUREMENT" />
+            <End Role="INGREDIENT" EntitySet="INGREDIENT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_INGREDIENT_RECIPE" Association="Self.FK_INGREDIENT_RECIPE">
+            <End Role="RECIPE" EntitySet="RECIPE" />
+            <End Role="INGREDIENT" EntitySet="INGREDIENT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RECIPE_AUTHOR" Association="Self.FK_RECIPE_AUTHOR">
+            <End Role="AUTHOR" EntitySet="AUTHOR" />
+            <End Role="RECIPE" EntitySet="RECIPE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RECIPE_CATEGORY" Association="Self.FK_RECIPE_CATEGORY">
+            <End Role="CATEGORY" EntitySet="CATEGORY" />
+            <End Role="RECIPE" EntitySet="RECIPE" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CookbookModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AUTHOR">
+          <Key>
+            <PropertyRef Name="AUTHOR_ID" />
+          </Key>
+          <Property Name="AUTHOR_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FIRST_NAME" Type="String" MaxLength="35" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LAST_NAME" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="RECIPEs" Relationship="Self.FK_RECIPE_AUTHOR" FromRole="AUTHOR" ToRole="RECIPE" />
+        </EntityType>
+        <EntityType Name="CATEGORY">
+          <Key>
+            <PropertyRef Name="CATEGORY_ID" />
+          </Key>
+          <Property Name="CATEGORY_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DESCRIPTION" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="RECIPEs" Relationship="Self.FK_RECIPE_CATEGORY" FromRole="CATEGORY" ToRole="RECIPE" />
+        </EntityType>
+        <EntityType Name="FOOD_ITEM">
+          <Key>
+            <PropertyRef Name="FOOD_ID" />
+          </Key>
+          <Property Name="FOOD_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DESCRIPTION" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="INGREDIENTs" Relationship="Self.FK_INGREDIENT_FOOD_ITEM" FromRole="FOOD_ITEM" ToRole="INGREDIENT" />
+        </EntityType>
+        <EntityType Name="INGREDIENT">
+          <Key>
+            <PropertyRef Name="RECIPE_ID" />
+            <PropertyRef Name="FOOD_ID" />
+          </Key>
+          <Property Name="RECIPE_ID" Type="Int32" Nullable="false" />
+          <Property Name="FOOD_ID" Type="Int32" Nullable="false" />
+          <Property Name="AMOUNT" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MEASUREMENT_ID" Type="Int32" />
+          <NavigationProperty Name="FOOD_ITEM" Relationship="Self.FK_INGREDIENT_FOOD_ITEM" FromRole="INGREDIENT" ToRole="FOOD_ITEM" />
+          <NavigationProperty Name="MEASUREMENT" Relationship="Self.FK_INGREDIENT_MEASUREMENT" FromRole="INGREDIENT" ToRole="MEASUREMENT" />
+          <NavigationProperty Name="RECIPE" Relationship="Self.FK_INGREDIENT_RECIPE" FromRole="INGREDIENT" ToRole="RECIPE" />
+        </EntityType>
+        <EntityType Name="MEASUREMENT">
+          <Key>
+            <PropertyRef Name="MEASUREMENT_ID" />
+          </Key>
+          <Property Name="MEASUREMENT_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DESCRIPTION" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="INGREDIENTs" Relationship="Self.FK_INGREDIENT_MEASUREMENT" FromRole="MEASUREMENT" ToRole="INGREDIENT" />
+        </EntityType>
+        <EntityType Name="RECIPE">
+          <Key>
+            <PropertyRef Name="RECIPE_ID" />
+          </Key>
+          <Property Name="RECIPE_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NAME" Type="String" MaxLength="75" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SERVING_SIZE" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="SERVING_UNIT" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CATEGORY_ID" Type="Int32" Nullable="false" />
+          <Property Name="INSTRUCTIONS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="AUTHOR_ID" Type="Int32" />
+          <NavigationProperty Name="AUTHOR" Relationship="Self.FK_RECIPE_AUTHOR" FromRole="RECIPE" ToRole="AUTHOR" />
+          <NavigationProperty Name="CATEGORY" Relationship="Self.FK_RECIPE_CATEGORY" FromRole="RECIPE" ToRole="CATEGORY" />
+          <NavigationProperty Name="INGREDIENTs" Relationship="Self.FK_INGREDIENT_RECIPE" FromRole="RECIPE" ToRole="INGREDIENT" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_RECIPE_AUTHOR">
+          <End Role="AUTHOR" Type="Self.AUTHOR" Multiplicity="0..1" />
+          <End Role="RECIPE" Type="Self.RECIPE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AUTHOR">
+              <PropertyRef Name="AUTHOR_ID" />
+            </Principal>
+            <Dependent Role="RECIPE">
+              <PropertyRef Name="AUTHOR_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RECIPE_CATEGORY">
+          <End Role="CATEGORY" Type="Self.CATEGORY" Multiplicity="1" />
+          <End Role="RECIPE" Type="Self.RECIPE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CATEGORY">
+              <PropertyRef Name="CATEGORY_ID" />
+            </Principal>
+            <Dependent Role="RECIPE">
+              <PropertyRef Name="CATEGORY_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_INGREDIENT_FOOD_ITEM">
+          <End Role="FOOD_ITEM" Type="Self.FOOD_ITEM" Multiplicity="1" />
+          <End Role="INGREDIENT" Type="Self.INGREDIENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FOOD_ITEM">
+              <PropertyRef Name="FOOD_ID" />
+            </Principal>
+            <Dependent Role="INGREDIENT">
+              <PropertyRef Name="FOOD_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_INGREDIENT_MEASUREMENT">
+          <End Role="MEASUREMENT" Type="Self.MEASUREMENT" Multiplicity="0..1" />
+          <End Role="INGREDIENT" Type="Self.INGREDIENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MEASUREMENT">
+              <PropertyRef Name="MEASUREMENT_ID" />
+            </Principal>
+            <Dependent Role="INGREDIENT">
+              <PropertyRef Name="MEASUREMENT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_INGREDIENT_RECIPE">
+          <End Role="RECIPE" Type="Self.RECIPE" Multiplicity="1" />
+          <End Role="INGREDIENT" Type="Self.INGREDIENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RECIPE">
+              <PropertyRef Name="RECIPE_ID" />
+            </Principal>
+            <Dependent Role="INGREDIENT">
+              <PropertyRef Name="RECIPE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CookbookEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AUTHORs" EntityType="Self.AUTHOR" />
+          <EntitySet Name="CATEGORies" EntityType="Self.CATEGORY" />
+          <EntitySet Name="FOOD_ITEM" EntityType="Self.FOOD_ITEM" />
+          <EntitySet Name="INGREDIENTs" EntityType="Self.INGREDIENT" />
+          <EntitySet Name="MEASUREMENTs" EntityType="Self.MEASUREMENT" />
+          <EntitySet Name="RECIPEs" EntityType="Self.RECIPE" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <AssociationSet Name="FK_RECIPE_AUTHOR" Association="Self.FK_RECIPE_AUTHOR">
+            <End Role="AUTHOR" EntitySet="AUTHORs" />
+            <End Role="RECIPE" EntitySet="RECIPEs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RECIPE_CATEGORY" Association="Self.FK_RECIPE_CATEGORY">
+            <End Role="CATEGORY" EntitySet="CATEGORies" />
+            <End Role="RECIPE" EntitySet="RECIPEs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_INGREDIENT_FOOD_ITEM" Association="Self.FK_INGREDIENT_FOOD_ITEM">
+            <End Role="FOOD_ITEM" EntitySet="FOOD_ITEM" />
+            <End Role="INGREDIENT" EntitySet="INGREDIENTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_INGREDIENT_MEASUREMENT" Association="Self.FK_INGREDIENT_MEASUREMENT">
+            <End Role="MEASUREMENT" EntitySet="MEASUREMENTs" />
+            <End Role="INGREDIENT" EntitySet="INGREDIENTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_INGREDIENT_RECIPE" Association="Self.FK_INGREDIENT_RECIPE">
+            <End Role="RECIPE" EntitySet="RECIPEs" />
+            <End Role="INGREDIENT" EntitySet="INGREDIENTs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CookbookModelStoreContainer" CdmEntityContainer="CookbookEntities">
+          <EntitySetMapping Name="AUTHORs">
+            <EntityTypeMapping TypeName="CookbookModel.AUTHOR">
+              <MappingFragment StoreEntitySet="AUTHOR">
+                <ScalarProperty Name="AUTHOR_ID" ColumnName="AUTHOR_ID" />
+                <ScalarProperty Name="FIRST_NAME" ColumnName="FIRST_NAME" />
+                <ScalarProperty Name="LAST_NAME" ColumnName="LAST_NAME" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CATEGORies">
+            <EntityTypeMapping TypeName="CookbookModel.CATEGORY">
+              <MappingFragment StoreEntitySet="CATEGORY">
+                <ScalarProperty Name="CATEGORY_ID" ColumnName="CATEGORY_ID" />
+                <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FOOD_ITEM">
+            <EntityTypeMapping TypeName="CookbookModel.FOOD_ITEM">
+              <MappingFragment StoreEntitySet="FOOD_ITEM">
+                <ScalarProperty Name="FOOD_ID" ColumnName="FOOD_ID" />
+                <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="INGREDIENTs">
+            <EntityTypeMapping TypeName="CookbookModel.INGREDIENT">
+              <MappingFragment StoreEntitySet="INGREDIENT">
+                <ScalarProperty Name="RECIPE_ID" ColumnName="RECIPE_ID" />
+                <ScalarProperty Name="FOOD_ID" ColumnName="FOOD_ID" />
+                <ScalarProperty Name="AMOUNT" ColumnName="AMOUNT" />
+                <ScalarProperty Name="MEASUREMENT_ID" ColumnName="MEASUREMENT_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MEASUREMENTs">
+            <EntityTypeMapping TypeName="CookbookModel.MEASUREMENT">
+              <MappingFragment StoreEntitySet="MEASUREMENT">
+                <ScalarProperty Name="MEASUREMENT_ID" ColumnName="MEASUREMENT_ID" />
+                <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RECIPEs">
+            <EntityTypeMapping TypeName="CookbookModel.RECIPE">
+              <MappingFragment StoreEntitySet="RECIPE">
+                <ScalarProperty Name="RECIPE_ID" ColumnName="RECIPE_ID" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+                <ScalarProperty Name="SERVING_SIZE" ColumnName="SERVING_SIZE" />
+                <ScalarProperty Name="SERVING_UNIT" ColumnName="SERVING_UNIT" />
+                <ScalarProperty Name="CATEGORY_ID" ColumnName="CATEGORY_ID" />
+                <ScalarProperty Name="INSTRUCTIONS" ColumnName="INSTRUCTIONS" />
+                <ScalarProperty Name="AUTHOR_ID" ColumnName="AUTHOR_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="CookbookModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,48 @@
+﻿@model FamilyCookbook.Models.EntityFramework.RECIPE
+@using FamilyCookbook.Models.EntityFramework
+
+@{
+    ViewBag.Title = Model.NAME;
+    CookbookEntities db = new CookbookEntities();
+}
+
+<div class="recipeDetails">
+
+    <img src="~/Content/Images/RecipeImages/@Model.CATEGORY.DESCRIPTION/@Model.RECIPE_ID/thumb.jpg" alt="@Model.NAME" width="250" height="250" />
+    <h2>@Model.NAME</h2>
+    <h3>@Model.AUTHOR.FIRST_NAME  @Model.AUTHOR.LAST_NAME</h3>
+    <h3>@Model.SERVING_SIZE @Model.SERVING_UNIT</h3>
+
+    <div class="ingredientSection">
+        <h4>Ingredients</h4>
+
+        <ul class="ingredientList">
+
+            @{
+                var ingredients = from r in db.INGREDIENTs
+                                  where r.RECIPE_ID.Equals(Model.RECIPE_ID)
+                                  select r;
+
+                foreach (INGREDIENT i in ingredients)
+                {
+                    if (@i.MEASUREMENT_ID != null)
+                    {
+                        <li>@i.AMOUNT @i.MEASUREMENT.DESCRIPTION @i.FOOD_ITEM.DESCRIPTION</li>
+                    }
+                    else
+                    {
+                        <li>@i.AMOUNT @i.FOOD_ITEM.DESCRIPTION</li>
+                    }
+                }
+            }
+
+        </ul>
+
+        <h4>Instructions</h4>
+
+        <p>
+            @Model.INSTRUCTIONS
+        </p>
+
+    </div>
+</div>
